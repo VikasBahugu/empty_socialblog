@@ -1,0 +1,14 @@
+{% extends 'appleStarts/base.html' %}
+{% block css %}{% endblock %}
+{%  block content %}
+<form method='post' action="{% url 'contacting' %}">
+    {% csrf_token %}
+    <center><h1>
+        Name: <input type="text" name="name"><br>
+        Email: <input type="text" name="email"><br>
+        Reason: <input type="text" name="content"><br>
+        <input type="submit" value="SUBMIT">
+    </h1></center>
+</form>
+
+{% endblock %}

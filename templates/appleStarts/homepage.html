@@ -1,0 +1,245 @@
+{% extends 'appleStarts/base.html' %}
+{% block css %}
+body{
+background: lightgrey;
+}
+
+<!-- Success -->
+<!--Alert css properties.-->
+<!-- Defalt alert will be success assumed. -->
+.alertsuccess{
+  font-size: 34px;
+}
+.alertsuccess{
+padding: 6px;
+border-radius: 9px; 
+font-size: 16px;
+background-color: #98FB98; /* Green */
+color: white;
+margin-bottom: 12px;
+}
+
+/* The close button */
+.closebtn {
+margin-left: 15px;
+color: white;
+font-weight: bold;
+float: right;
+font-size: 22px;
+line-height: 20px;
+cursor: pointer;
+transition: 0.3s;
+}
+<!-- Error -->
+<!--Alert css properties.-->
+<!-- Defalt alert will be success assumed. -->
+.alerterror{
+  font-size: 34px;
+}
+.alerterror{
+padding: 6px;
+border-radius: 9px; 
+font-size: 16px;
+background-color: #F08080; /* Green */
+color: white;
+margin-bottom: 12px;
+}
+
+/* The close button */
+.closebtn {
+margin-left: 15px;
+color: white;
+font-weight: bold;
+float: right;
+font-size: 22px;
+line-height: 20px;
+cursor: pointer;
+transition: 0.3s;
+}
+<!-- End of Alerts -->
+
+
+
+
+#title, #content{
+font-size: 21px;
+border: 0px solid black;
+}
+#post_to_public{
+font-size: 19px;
+padding: 8px;
+width: 60%;
+}
+#content{
+font-size: 28px;
+}
+#post_title{
+font-size: 21px;
+margin: auto;
+border: 0px solid black;
+border-radius: 4px;
+margin-bottom: 8px;
+padding: 5px;
+}
+
+<!--####################################This is used to style the form that asks to post.-->
+body{
+background: grey;
+}
+/* Style inputs with type="text", select elements and textareas */
+input[type=text], input[type=password]{
+width: 100%; /* Full width */
+padding: 12px; /* Some padding */
+border: 1px solid #ccc; /* Gray border */
+border-radius: 4px; /* Rounded borders */
+box-sizing: border-box; /* Make sure that padding and width stays in place */
+margin-top: 6px; /* Add a top margin */
+margin-bottom: 16px; /* Bottom margin */
+resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+
+/* Style the submit button with a specific background color etc */
+input[type=submit] {
+background-color: #4CAF50;
+color: white;
+padding: 12px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+/* When moving the mouse over the submit button, add a darker green color */
+input[type=submit]:hover {
+background-color: #45a049;
+}
+
+/* Add a background color and some padding around the form */
+.container {
+
+margin-left: 18%;
+margin-top: 0.3%;
+margin-right: 18%;
+border-radius: 5px;
+background-color: #f2f2f2;
+padding: 20px;
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 6px;
+  font-size: 19px;
+  border: none;
+  cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+.alert{
+}
+{% endblock css %}
+{% block content %}
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0"></script>
+
+<div class="alert_container">
+
+  
+  <!-- From now i will use the MESSAGE framework. -->
+  {% for message in messages %}
+  <div class="alert{{message.tags}}">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    {{ message }}
+  </div>
+  {% endfor %}
+  
+  {% if not user.is_authenticated %}
+      <h1>Please login first. I will upload homepage later.</h1>
+  {% endif %}
+
+</div>
+
+  
+
+
+    {% if user.is_authenticated %}
+    <div class="container">
+        <form method='post' enctype="multipart/form-data" action="{% url 'userposts' %}">
+            {% csrf_token %}
+
+            <label id="post_size" style="font-size:19px">Create Post</label>
+
+            <hr>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Title for the post.." required>
+
+            <label for="content">Content</label>
+            <input type="text" id="content" name="content" placeholder="What is on your mind?" required>
+            <input id="image" type="file" class="photo" name="postedphotos" placeholder="Photo"><br>
+
+            <center><input type="submit" id="post_to_public" value="Post to public?"></center>
+        </form>
+    </div>
+    <!-- Here, you will display all posts. -->
+    {% for post in userkeposts.0 %}
+      <div class="container">
+          <u><h2>{{ post.title }}</h2></u>
+
+
+          <div style="margin-left: 70%;">{{ post.timestamp|date:"F d, Y" }}
+              <div class="dropdown" style="margin-left: 38%;">
+                  <button class="dropbtn">:</button>
+                  <div class="dropdown-content">
+                    <a href="#">Edit Post</a>
+                    <a href="#">Update Post</a>
+                    <a href="#">Delete Post</a>
+                  </div>
+                </div>
+              </div>
+          <img src="{{ post.photo.url }}" alt="Unable to view image." style="width:45%">
+          <h4>{{ post.content }}</h4>
+          <!-- <div class="fb-comments" data-href="http://localhost:8000/{{post.id}}" data-width="" data-numposts="1"></div> -->
+      </div>
+</div>
+{% endfor %}
+
+{% endif %}
+
+
+{% endblock content %}
